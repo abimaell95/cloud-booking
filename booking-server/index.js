@@ -112,7 +112,7 @@ app.post('/passenger', (req, res) => {
     }
 
         const body = req.body;
-
+        let passId;
         //getting next value
         const query = {
             sql: "SELECT next_value FROM sequences WHERE name='passenger'",
@@ -123,6 +123,7 @@ app.post('/passenger', (req, res) => {
         rows.forEach(row => {
             const json = row.toJSON();
             nextValue = json.next_value;
+            passId = nextValue;
         });
         } catch (err) {
             console.error('ERROR Getting seq value:', err);
@@ -159,7 +160,7 @@ app.post('/passenger', (req, res) => {
             });
 
             await transaction.commit();
-            res.json({status:200});
+            res.json({status:200,passId:passId});
           } catch (err) {
             console.error('ERROR setting next value:', err);
             await transaction.rollback();
